@@ -1,0 +1,158 @@
+---
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+import { branches } from "../data/clinic";
+
+const nav = [
+  { href: "#indications", label: "З чим звертаються" },
+  { href: "#services", label: "Напрями й ціни" },
+  { href: "#military", label: "Для військових" },
+  { href: "#doctor", label: "Лікар" },
+  { href: "#branches", label: "Відділення" },
+];
+const main = branches[0];
+---
+<header class="site-header" data-header data-rec="R-003">
+  <div class="container bar">
+    <a class="brand" href="#top" aria-label="Refit, реабілітація хребта й суглобів — на початок сторінки">
+      <Logo class="brand__logo" />
+    </a>
+
+    <nav class="nav-desktop" aria-label="Розділи сторінки">
+      <ul>
+        {nav.map((i) => <li><a href={i.href}>{i.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="phones" data-rec="R-001,R-004">
+      {branches.map((b) => (
+        <a class="phone" href={b.phoneHref} aria-label={`Подзвонити у відділення ${b.street}: ${b.phoneDisplay}`}>
+          <span class="phone__num act">{b.phoneDisplay}</span>
+          <span class="phone__addr">{b.street}</span>
+        </a>
+      ))}
+    </div>
+
+    <a class="btn btn--primary header-cta" href={main.phoneHref} data-rec="R-005" aria-label={`Подзвонити: ${main.phoneDisplay}, ${main.street}`}>
+      <span>Подзвонити</span>
+      <span class="nudge"><Icon name="arrow" /></span>
+    </a>
+
+    <a class="icon-btn call-icon" href={main.phoneHref} aria-label={`Подзвонити: ${main.phoneDisplay}, ${main.street}`} data-rec="R-001">
+      <Icon name="phone" />
+    </a>
+
+    <details class="menu" data-menu>
+      <summary class="icon-btn" aria-label="Меню">
+        <span class="menu__open"><Icon name="menu" /></span>
+        <span class="menu__close"><Icon name="close" /></span>
+      </summary>
+      <div class="menu__panel">
+        <nav aria-label="Меню">
+          <ul>
+            {nav.map((i) => <li><a href={i.href} data-menu-link>{i.label}</a></li>)}
+          </ul>
+        </nav>
+        <div class="menu__phones">
+          {branches.map((b) => (
+            <a class="menu__phone" href={b.phoneHref}>
+              <span class="act">{b.phoneDisplay}</span>
+              <span class="small">{b.street}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </details>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const menu = document.querySelector<HTMLDetailsElement>("[data-menu]");
+  if (header) {
+    const onScroll = () => header.classList.toggle("is-scrolled", window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+  if (menu) {
+    menu.querySelectorAll("[data-menu-link]").forEach((a) =>
+      a.addEventListener("click", () => menu.removeAttribute("open")),
+    );
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && menu.open) {
+        menu.removeAttribute("open");
+        menu.querySelector("summary")?.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--color-bg);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .site-header.is-scrolled { border-bottom-color: var(--color-border); }
+  .bar { height: var(--header-h); display: flex; align-items: center; gap: var(--space-2); }
+  .brand { display: inline-flex; align-items: center; min-height: var(--tap); color: var(--color-accent); margin-right: auto; }
+  .brand__logo { width: 78px; height: auto; }
+
+  .nav-desktop, .phones, .header-cta { display: none; }
+
+  .icon-btn {
+    display: inline-grid; place-items: center; width: var(--tap); height: var(--tap);
+    border-radius: var(--radius); color: var(--color-text); cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+  .icon-btn :global(.icon) { width: 24px; height: 24px; }
+  .icon-btn:hover { background: var(--color-surface); }
+  .call-icon { color: var(--color-accent); }
+
+  .menu summary { list-style: none; }
+  .menu summary::-webkit-details-marker { display: none; }
+  .menu__close { display: none; }
+  .menu[open] .menu__open { display: none; }
+  .menu[open] .menu__close { display: inline; }
+  .menu__panel {
+    position: absolute; left: 0; right: 0; top: var(--header-h);
+    background: var(--color-bg); border-bottom: 1px solid var(--color-border);
+    padding: var(--space-1) var(--gutter) var(--space-4);
+    max-height: calc(100dvh - var(--header-h)); overflow-y: auto;
+  }
+  .menu__panel ul { list-style: none; margin: 0; padding: 0; }
+  .menu__panel li a {
+    display: flex; align-items: center; padding-block: var(--space-2); line-height: 1.5; white-space: nowrap; border-bottom: 1px solid var(--color-border);
+    font-weight: 500; text-decoration: none; color: var(--color-text);
+  }
+  .menu__phones { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
+  .menu__phone { display: grid; gap: 2px; text-decoration: none; color: var(--color-accent); }
+  .menu__phone .act { font-size: var(--fs-action); line-height: 1.1; }
+
+  @media (min-width: 1024px) {
+    .call-icon, .menu { display: none; }
+    .brand__logo { width: 94px; }
+    .brand { margin-right: clamp(var(--space-2), -2rem + 4vw, var(--space-4)); }
+    .nav-desktop { display: block; margin-right: auto; }
+    .nav-desktop ul { display: flex; gap: clamp(var(--space-2), -1rem + 2.4vw, var(--space-3)); white-space: nowrap; list-style: none; margin: 0; padding: 0; }
+    .nav-desktop a {
+      display: inline-flex; align-items: center; min-height: var(--tap);
+      font-size: var(--fs-small); font-weight: 500; color: var(--color-text);
+      text-decoration: none;
+      transition: color var(--dur-fast) var(--ease-out);
+    }
+    .nav-desktop a:hover { color: var(--color-accent); text-decoration: underline; text-underline-offset: 6px; }
+    .header-cta { display: inline-flex; min-height: 48px; }
+  }
+  @media (min-width: 1400px) {
+    .phones { display: flex; gap: var(--space-3); margin-right: var(--space-1); }
+    .phone { display: grid; text-decoration: none; color: var(--color-accent); line-height: 1.15; }
+    .phone__num { font-size: var(--fs-button); }
+    .phone__addr { font-size: var(--fs-xs); color: var(--color-muted); font-weight: 500; }
+    .phone:hover .phone__num { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header { transition: none; }
+  }
+</style>

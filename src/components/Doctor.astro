@@ -1,0 +1,49 @@
+---
+import Section from "./Section.astro";
+import FutureLink from "./FutureLink.astro";
+import { doctor, license, futureNote } from "../data/clinic";
+import { asset } from "../lib/asset";
+---
+<Section id="doctor" rec="R-006" class="doc">
+  <div class="container grid doc__grid">
+    <figure class="doc__media" data-rec="R-103,R-109">
+      <img
+        src={asset("img/doctor-700.webp")}
+        srcset={`${asset("img/doctor-480.webp")} 480w, ${asset("img/doctor-700.webp")} 700w`}
+        sizes="(min-width: 1024px) 700px, calc(100vw - 40px)"
+        width="700" height="467" loading="lazy" decoding="async"
+        alt="Кліментьєва Л. З. веде прийом: розмова з пацієнткою за столом, поруч модель хребта і знімки"
+      />
+      <figcaption class="small">Прийом веде Кліментьєва Л. З.</figcaption>
+    </figure>
+
+    <div class="doc__text">
+      <h2 class="h2">Лікар і методика</h2>
+      <h3 class="doc__name">{doctor.name}</h3>
+      <p class="doc__role">{doctor.role}</p>
+      <p class="doc__years"><span class="figure">{doctor.years}</span> <span class="doc__years-label">років досвіду</span></p>
+      <p class="doc__method">Авторка методики «{doctor.method}».</p>
+      <p class="small">{license}</p>
+      <FutureLink note={futureNote} class="fl-quiet doc__all">Усі фахівці центру</FutureLink>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .doc { padding-block: var(--section-gap); }
+  .doc__grid { row-gap: var(--space-6); align-items: center; }
+  .doc__media, .doc__text { grid-column: 1 / -1; }
+  .doc__media { margin: 0; display: grid; gap: var(--space-1); }
+  .doc__media img { width: 100%; height: auto; }
+  .doc__text { display: grid; gap: var(--space-2); justify-items: start; }
+  .doc__name { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-action-lg); line-height: 1.05; margin-top: var(--space-2); }
+  .doc__role { font-weight: 500; }
+  .doc__years { display: flex; align-items: baseline; gap: var(--space-1); margin-top: var(--space-2); }
+  .doc__years-label { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-action); }
+  .doc__method { max-width: 32ch; }
+  .doc__text :global(.doc__all) { margin-top: var(--space-2); font-size: var(--fs-small); font-weight: 500; }
+  @media (min-width: 1024px) {
+    .doc__media { grid-column: 1 / span 7; }
+    .doc__text { grid-column: 9 / span 4; }
+  }
+</style>

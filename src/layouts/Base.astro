@@ -1,0 +1,43 @@
+---
+import "@fontsource/sofia-sans-condensed/700.css";
+import "@fontsource/sofia-sans-condensed/700-italic.css";
+import "@fontsource/sofia-sans-condensed/800.css";
+import "@fontsource-variable/commissioner/wght.css";
+import "../styles/tokens.css";
+import "../styles/global.css";
+import "../styles/site.css";
+// The H1 (LCP text) is set in the display face 800: preload only that file.
+import displayFont from "@fontsource/sofia-sans-condensed/files/sofia-sans-condensed-cyrillic-800-normal.woff2?url";
+
+interface Props { lang: string; title: string; description: string; canonical?: string; mainRec?: string; }
+const { lang, title, description, canonical, mainRec } = Astro.props;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add("js")</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="uk_UA" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/favicon.svg`} type="image/svg+xml" />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#main">{lang.startsWith("uk") ? "До змісту" : lang.startsWith("ru") ? "К содержанию" : "Skip to content"}</a>
+    <slot name="header" />
+    <main id="main" data-rec={mainRec}><slot /></main>
+    <slot name="footer" />
+    <script src="../scripts/reveal.ts"></script>
+  </body>
+</html>
+<style is:global>
+  /* Floor 4: kept next to the <html> element so page-level checks see it (also in global.css). */
+  html, body { overflow-x: clip; }
+</style>

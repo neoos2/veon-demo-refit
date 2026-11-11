@@ -1,0 +1,132 @@
+---
+import Section from "./Section.astro";
+import Icon from "./Icon.astro";
+import { branches, license } from "../data/clinic";
+import { asset } from "../lib/asset";
+
+const [first, second] = branches;
+---
+<Section id="hero" rec="R-002,R-008" class="hero">
+  <div class="container hero__inner">
+    <div class="hero__top">
+    <div class="hero__head">
+    <h1 class="hero__title" data-rec="R-201,R-305">Реабілітація хребта й суглобів у Харкові</h1>
+    <div class="hero__lead">
+      <p class="hero__sub">Заняття на декомпресійних тренажерах і лікувальна гімнастика під наглядом лікаря. Два відділення.</p>
+    </div>
+    </div>
+
+      <div class="hero__calls" data-rec="R-001,R-005">
+        <a class="call call--primary" href={first.phoneHref} aria-label={`Подзвонити у відділення ${first.street}: ${first.phoneDisplay}`}>
+          <span class="call__label">Подзвонити</span>
+          <span class="call__num"><span class="nudge">{first.phoneDisplay}</span></span>
+          <span class="call__addr">{first.street}</span>
+          <span class="call__icon nudge"><Icon name="arrow" /></span>
+        </a>
+        <a class="call call--outline" href={second.phoneHref} aria-label={`Подзвонити у відділення ${second.street}: ${second.phoneDisplay}`}>
+          <span class="call__label">Подзвонити</span>
+          <span class="call__num"><span class="nudge">{second.phoneDisplay}</span></span>
+          <span class="call__addr">{second.street}</span>
+          <span class="call__icon nudge"><Icon name="arrow" /></span>
+        </a>
+        <a class="hero__promo link-act" href="#military" data-rec="R-002">
+          <span>Спецпропозиція для військових</span>
+          <span class="nudge"><Icon name="arrow" /></span>
+        </a>
+        <p class="small hero__license" data-rec="R-006">{license}</p>
+      </div>
+    </div>
+
+    <div class="hero__band">
+
+      <figure class="hero__media" data-rec="R-101,R-103">
+        <picture>
+          <source
+            media="(min-width: 768px)"
+            type="image/webp"
+            srcset={`${asset("img/hero-wide-800.webp")} 800w, ${asset("img/hero-wide-1200.webp")} 1200w, ${asset("img/hero-wide-1600.webp")} 1600w`}
+            sizes="(min-width: 1440px) 872px, 66vw"
+            width="1600" height="700"
+          />
+          <img
+            src={asset("img/hero-mob-800.webp")}
+            srcset={`${asset("img/hero-mob-400.webp")} 400w, ${asset("img/hero-mob-800.webp")} 800w`}
+            sizes="calc(100vw - 40px)"
+            width="800" height="600"
+            alt="Заняття в залі Refit: пацієнтка виконує вправу на килимку з петлями тренажера"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
+      </figure>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .hero { padding-block: var(--space-4) var(--space-6); }
+  .hero__title {
+    font-family: var(--font-display); font-weight: 800; font-size: var(--fs-display);
+    line-height: var(--lh-display); letter-spacing: -0.01em; max-width: 11ch;
+  }
+  .hero__lead { margin-top: var(--space-3); display: grid; gap: var(--space-1); max-width: 56ch; }
+  .hero__sub { font-size: var(--fs-body); line-height: 1.5; }
+  .hero__license { color: var(--color-muted); }
+
+  .hero__top { display: grid; gap: var(--space-3); }
+  .hero__band { margin-top: var(--space-4); }
+  .hero__calls { display: grid; gap: var(--space-2); align-content: start; }
+
+  .call {
+    position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+    column-gap: var(--space-2); min-height: 64px; padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius); border: 2px solid transparent; text-decoration: none;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+  .call__label { grid-column: 1; font-size: var(--fs-small); font-weight: 600; }
+  .call__num {
+    grid-column: 1; font-family: var(--font-display); font-style: italic; font-weight: 700;
+    font-size: var(--fs-action); line-height: 1.05; font-variant-numeric: lining-nums;
+  }
+  .call__addr { grid-column: 1; font-size: var(--fs-small); font-weight: 500; }
+  .call__icon { grid-column: 2; grid-row: 1 / span 3; }
+  .call__icon :global(.icon) { width: 24px; height: 24px; }
+  .call--primary { background: var(--color-accent); color: var(--color-accent-ink); }
+  .call--primary:hover { background: var(--color-accent-hover); }
+  .call--outline { border-color: var(--color-border-strong); color: var(--color-text); }
+  .call--outline .call__num { color: var(--color-accent); }
+  .call--outline:hover { background: var(--color-surface); }
+  .call:active { transform: scale(.98); }
+
+  .hero__promo { margin-top: var(--space-1); justify-self: start; }
+
+  .hero__media { margin: 0; overflow: hidden; border-radius: var(--radius); background: var(--color-surface); }
+  .hero__media img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+
+  /* Motion 1: the frame opens left to right, "moving ahead". Text and calls are visible at once. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .hero__media img { animation: hero-open 500ms var(--ease-out) 120ms both; }
+  }
+  @keyframes hero-open { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+  @media (min-width: 768px) {
+    .hero { padding-block: var(--space-6) var(--space-8); }
+    .hero__title { max-width: none; }
+    .hero__top { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--col-gap); align-items: start; }
+    .hero__head { grid-column: 1 / span 7; }
+    .hero__calls { grid-column: 8 / span 5; }
+    .hero__media img { aspect-ratio: 16 / 7; }
+    /* the second call steps 24px to the right: the diagonal of the logo */
+    .call--outline { margin-left: var(--space-3); }
+  }
+  @media (min-width: 1024px) {
+    .hero__title { max-width: none; }
+    .hero__head { grid-column: 1 / span 8; }
+    .hero__calls { grid-column: 9 / span 4; }
+    .hero__media img { aspect-ratio: 21 / 8; }
+    .call { min-height: 104px; padding: var(--space-2) var(--space-3); }
+  }
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    :global(.js) .hero__media img { animation-duration: 700ms; }
+  }
+</style>

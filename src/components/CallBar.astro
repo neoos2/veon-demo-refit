@@ -1,0 +1,44 @@
+---
+import Icon from "./Icon.astro";
+import { branches } from "../data/clinic";
+---
+<div class="callbar" data-callbar data-rec="R-001">
+  {branches.map((b, i) => (
+    <a class:list={["callbar__btn", { "callbar__btn--main": i === 0 }]} href={b.phoneHref} aria-label={`Подзвонити у відділення ${b.street}: ${b.phoneDisplay}`}>
+      <Icon name="phone" />
+      <span>{b.phoneShortLabel}</span>
+    </a>
+  ))}
+</div>
+
+<script>
+  // Motion 4: the call bar slides up once the hero has left the screen (mobile only, via CSS).
+  const bar = document.querySelector<HTMLElement>("[data-callbar]");
+  const hero = document.getElementById("hero");
+  if (bar && hero && "IntersectionObserver" in window) {
+    bar.classList.add("is-armed");
+    new IntersectionObserver(([e]) => bar.classList.toggle("is-shown", !e.isIntersecting), { threshold: 0 }).observe(hero);
+  }
+</script>
+
+<style>
+  .callbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    height: var(--callbar-h); background: var(--color-bg); border-top: 1px solid var(--color-border);
+    padding-bottom: env(safe-area-inset-bottom);
+    transition: transform 240ms var(--ease-out);
+  }
+  .callbar.is-armed:not(.is-shown) { transform: translateY(110%); }
+  .callbar.is-armed:not(.is-shown) .callbar__btn { visibility: hidden; transition: visibility 0s 240ms; }
+  .callbar__btn {
+    display: flex; align-items: center; justify-content: center; gap: var(--space-1);
+    font-family: var(--font-display); font-style: italic; font-weight: 700; font-size: var(--fs-button);
+    text-decoration: none; color: var(--color-text); min-width: 0;
+  }
+  .callbar__btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .callbar__btn--main { background: var(--color-accent); color: var(--color-accent-ink); }
+  .callbar__btn:active { transform: scale(.98); }
+  @media (min-width: 1024px) { .callbar { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .callbar { transition: none; } .callbar__btn:active { transform: none; } }
+</style>

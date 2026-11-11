@@ -1,0 +1,40 @@
+---
+import Section from "./Section.astro";
+import Icon from "./Icon.astro";
+import { military, branches } from "../data/clinic";
+
+const main = branches[0];
+---
+<Section id="military" rec="R-002" class="mil on-dark">
+  <div class="container grid mil__grid">
+    <div class="mil__head">
+      <h2 class="h2 mil__title">Для військових</h2>
+      <p class="mil__text">Абонемент на місяць: {military.sessions} занять з реабілітологом і безкоштовна консультація лікаря.</p>
+    </div>
+    <div class="mil__offer">
+      <p class="mil__price"><span class="figure">{military.price}</span><span class="mil__cur">грн</span></p>
+      <p class="mil__regular">Звичайна ціна абонемента — {military.regular} грн</p>
+      <a class="btn btn--light mil__cta" href={main.phoneHref} aria-label={`Дізнатися про абонемент для військових: подзвонити ${main.phoneDisplay}, ${main.street}`} data-rec="R-005">
+        <span>Подзвонити, {main.phoneDisplay}</span><span class="nudge"><Icon name="arrow" /></span>
+      </a>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .mil { background: var(--color-inverse-bg); color: var(--color-inverse-text); padding-block: var(--space-12); }
+  .mil__grid { row-gap: var(--space-4); align-items: end; }
+  .mil__head, .mil__offer { grid-column: 1 / -1; }
+  .mil__head { display: grid; gap: var(--space-2); }
+  .mil__title { color: var(--color-inverse-text); }
+  .mil__text { max-width: 36ch; font-size: var(--fs-body); }
+  .mil__offer { display: grid; gap: var(--space-2); justify-items: start; }
+  .mil__price { display: flex; align-items: baseline; gap: var(--space-1); }
+  .mil__cur { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-action); }
+  .mil__regular { color: var(--color-inverse-muted); font-size: var(--fs-small); font-weight: 500; }
+  .mil__cta { margin-top: var(--space-1); white-space: nowrap; }
+  @media (min-width: 1024px) {
+    .mil__head { grid-column: 1 / span 6; }
+    .mil__offer { grid-column: 8 / span 5; }
+  }
+</style>

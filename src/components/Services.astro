@@ -1,0 +1,118 @@
+---
+import Section from "./Section.astro";
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import { services, branches, futureNote } from "../data/clinic";
+import { asset } from "../lib/asset";
+
+const main = branches[0];
+---
+<Section id="services" rec="R-007" class="svc">
+  <div class="container">
+    <div class="svc__head">
+      <h2 class="h2">Напрями й ціни</h2>
+      <p class="svc__intro">Ціна — за одне заняття або консультацію. Записуйтесь телефоном у відділення на пр.&nbsp;Науки, 9&nbsp;Д або пр.&nbsp;Тракторобудівників, 1&nbsp;Б.</p>
+    </div>
+
+    <ol class="ladder" data-reveal>
+      {services.map((s, i) => (
+        <li class:list={["row", { "row--extra": s.extra }]} style={`--step:${i}`} id={`svc-${s.id}`}>
+          <img
+            class="row__img"
+            src={asset(`img/${s.image}-160.webp`)}
+            srcset={`${asset(`img/${s.image}-160.webp`)} 160w, ${asset(`img/${s.image}-320.webp`)} 320w`}
+            sizes="(min-width: 1024px) 160px, 88px"
+            width="160" height="160" alt={s.imageAlt} loading="lazy" decoding="async"
+            data-rec="R-109"
+          />
+          <div class="row__body">
+            <h3 class="row__title act">{s.title}</h3>
+            <p class="row__text">{s.text}</p>
+            {s.extra && (
+              <div class="row__extra">
+                <p class="row__extra-title">{s.extra.title}:</p>
+                <ul>{s.extra.items.map((x) => <li>{x}</li>)}</ul>
+              </div>
+            )}
+          </div>
+          <p class="row__price">
+            <span class="row__now"><span class="figure">{s.price}</span><span class="row__cur">грн</span></span>
+            {s.oldPrice && <s class="row__old"><span class="visually-hidden">раніше </span>{s.oldPrice}&nbsp;грн</s>}
+          </p>
+          <div class="row__actions">
+            <a class="btn btn--primary" href={main.phoneHref} data-rec="R-005" aria-label={`Записатися: ${s.title}. Подзвонити ${main.phoneDisplay}, ${main.street}`}>
+              <span>Записатися</span><span class="nudge"><Icon name="arrow" /></span>
+            </a>
+            <FutureLink note={futureNote} class="fl-quiet row__more">Докладніше</FutureLink>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</Section>
+
+<style>
+  .svc { padding-block: var(--section-gap); }
+  .svc__head { display: grid; gap: var(--space-2); max-width: 760px; margin-bottom: var(--space-6); }
+  .svc__intro { color: var(--color-muted); }
+
+  .ladder { --shift: 24px; list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+  .row {
+    margin-left: calc(var(--step) * var(--shift));
+    display: grid; grid-template-columns: 88px minmax(0, 1fr); column-gap: var(--space-2); row-gap: var(--space-2);
+    grid-template-areas: "img title" "text text" "extra extra" "price price" "actions actions";
+    padding-top: var(--space-4); border-top: 2px solid var(--color-text);
+  }
+  .row__img { grid-area: img; width: 88px; height: 88px; object-fit: cover; object-position: 50% 35%; aspect-ratio: 1 / 1; border-radius: var(--radius); background: var(--color-surface); filter: none; }
+  .row__body { display: contents; }
+  .row__title { grid-area: title; align-self: center; font-size: var(--fs-action); line-height: 1.05; }
+  .row__text { grid-area: text; }
+  .row__extra { grid-area: extra; }
+  .row__text { max-width: 52ch; }
+  .row__extra { font-size: var(--fs-small); }
+  .row__extra-title { font-weight: 600; }
+  .row__extra ul { margin: var(--space-1) 0 0; padding-left: 1.1em; }
+  .row__price { grid-area: price; display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-1); }
+  .row__now { display: inline-flex; align-items: baseline; gap: var(--space-1); white-space: nowrap; }
+  .row__cur { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-action); }
+  .row__old { color: var(--color-muted); font-size: max(0.875rem, var(--fs-small)); white-space: nowrap; font-weight: 500; }
+  .row__actions { grid-area: actions; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .row__actions :global(.row__more) { font-size: var(--fs-small); font-weight: 500; }
+
+  /* Motion 2: rows arrive along the diagonal, one by one */
+  :global(.js) .ladder[data-reveal]:not(.is-visible) { opacity: 1; transform: none; }
+  .row { transition: opacity 300ms var(--ease-out), transform var(--dur) var(--ease-out); transition-delay: calc(var(--step) * 90ms); }
+  :global(.js) .ladder:not(.is-visible) .row { opacity: 0; }
+  @media (min-width: 768px) {
+    .ladder { --shift: 40px; }
+    :global(.js) .ladder:not(.is-visible) .row { transform: translate(-24px, 12px); }
+    .row {
+      grid-template-columns: 120px minmax(0, 1fr) auto;
+      grid-template-areas: "img title price" "img text price" "img extra extra" "img actions actions";
+      column-gap: var(--space-4);
+    }
+    .row__img { width: 120px; height: 120px; }
+    .row__body { display: contents; }
+    .row__title { align-self: end; }
+    .row__text { grid-area: text; }
+    .row__extra { grid-area: extra; }
+    .row__price { justify-self: end; align-self: start; flex-direction: column; align-items: flex-end; gap: 0; }
+    .row__price .figure { display: inline; }
+  }
+  @media (min-width: 1024px) {
+    .ladder { --shift: calc((100% + var(--col-gap)) / 12); gap: var(--space-6); }
+    .row {
+      grid-template-columns: 160px minmax(0, 1fr) auto auto;
+      grid-template-areas: "img title price actions" "img text price actions" "img extra price actions";
+      align-items: start;
+    }
+    .row__img { width: 160px; height: 160px; }
+    .row__price { padding-right: var(--space-2); }
+    .row__actions { flex-direction: column; align-items: stretch; gap: var(--space-1); padding-top: var(--space-1); }
+    .row__actions :global(.row__more) { justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .ladder:not(.is-visible) .row { opacity: 1; transform: none; }
+    .row { transition: none; }
+  }
+</style>

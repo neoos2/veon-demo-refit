@@ -1,0 +1,50 @@
+---
+import Logo from "./Logo.astro";
+import FutureLink from "./FutureLink.astro";
+import { branches, license, futureNote } from "../data/clinic";
+
+const future = ["Послуги", "Фахівці", "Контакти", "Політика конфіденційності"];
+---
+<footer class="site-footer" data-rec="R-009">
+  <div class="container grid ft">
+    <div class="ft__brand">
+      <a class="ft__logo" href="#top" aria-label="Refit — на початок сторінки"><Logo /></a>
+      <p>Реабілітація хребта й суглобів у Харкові</p>
+      <p class="small">{license}</p>
+    </div>
+    <ul class="ft__branches">
+      {branches.map((b) => (
+        <li>
+          <a class="ft__phone act" href={b.phoneHref} aria-label={`Подзвонити у відділення ${b.street}: ${b.phoneDisplay}`}>{b.phoneDisplay}</a>
+          <span class="small">{b.street}</span>
+        </li>
+      ))}
+    </ul>
+    <nav class="ft__nav" aria-label="Розділи сайту">
+      <ul>
+        {future.map((f) => <li><FutureLink note={futureNote} class="fl-quiet">{f}</FutureLink></li>)}
+      </ul>
+    </nav>
+    <p class="ft__copy small">© Refit</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--color-surface); border-top: 1px solid var(--color-border); padding-block: var(--space-8) calc(var(--space-6) + var(--callbar-h)); }
+  .ft { row-gap: var(--space-4); }
+  .ft__brand, .ft__branches, .ft__nav, .ft__copy { grid-column: 1 / -1; }
+  .ft__brand { display: grid; gap: var(--space-1); justify-items: start; }
+  .ft__logo { display: inline-flex; color: var(--color-accent); min-height: var(--tap); align-items: center; }
+  .ft__branches { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+  .ft__branches li { display: grid; }
+  .ft__phone { color: var(--color-accent); font-size: var(--fs-action); text-decoration: none; min-height: var(--tap); display: inline-flex; align-items: center; }
+  .ft__phone:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 4px; }
+  .ft__nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1); justify-items: start; }
+  .ft__nav :global(.future-link) { font-size: var(--fs-small); }
+  @media (min-width: 1024px) {
+    .site-footer { padding-bottom: var(--space-6); }
+    .ft__brand { grid-column: 1 / span 4; }
+    .ft__branches { grid-column: 5 / span 4; }
+    .ft__nav { grid-column: 9 / span 4; }
+  }
+</style>

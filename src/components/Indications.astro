@@ -1,0 +1,46 @@
+---
+import Section from "./Section.astro";
+import FutureLink from "./FutureLink.astro";
+import { indications, futureNote } from "../data/clinic";
+---
+<Section id="indications" rec="R-007" class="ind">
+  <div class="container grid ind__grid">
+    <div class="ind__head">
+      <h2 class="h2">З чим звертаються</h2>
+      <p class="ind__note">Стани, з якими працюють лікар і реабілітологи центру.</p>
+    </div>
+    <ul class="ind__list">
+      {indications.map((item) => (
+        <li><FutureLink note={futureNote} class="ind__item">{item}</FutureLink></li>
+      ))}
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .ind { background: var(--color-surface); padding-block: var(--section-gap); }
+  .ind__grid { row-gap: var(--space-4); }
+  .ind__head { grid-column: 1 / -1; display: grid; gap: var(--space-2); align-content: start; }
+  .ind__note { color: var(--color-muted); font-size: var(--fs-small); max-width: 32ch; }
+  .ind__list { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+  .ind__list li { border-top: 1px solid var(--color-border); }
+  .ind__list li:last-child { border-bottom: 1px solid var(--color-border); }
+  .ind__list :global(.ind__item) {
+    display: flex; width: 100%; min-height: 56px; padding-block: var(--space-1);
+    font-family: var(--font-display); font-weight: 700; font-size: var(--fs-action); line-height: 1.1;
+    color: var(--color-text); transition: color var(--dur-fast) var(--ease-out);
+  }
+  .ind__list :global(.ind__item:hover) { color: var(--color-muted); }
+  .ind__list :global(.ind__item .future-link__note) { left: 0; transform: translate(0, -4px); }
+  .ind__list :global(.ind__item:hover .future-link__note),
+  .ind__list :global(.ind__item:focus-visible .future-link__note) { transform: translate(0, 0); }
+
+  @media (min-width: 768px) {
+    .ind__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); }
+    .ind__list li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .ind__head { grid-column: 1 / span 4; }
+    .ind__list { grid-column: 5 / -1; }
+  }
+</style>

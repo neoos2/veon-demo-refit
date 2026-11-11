@@ -1,0 +1,69 @@
+/* Hallmark · shape: type-led hero over a photo strip, diagonal price ladder · genre: editorial · theme: custom · job: book · idea: "курсив логотипа — граматика: дія нахилена, факт прямий" · vibe: "червоний бренду, прямі факти, нахил дії"
+ * paper: #FFFFFF · surface: absolute · accent: #B51F24 · display: Sofia Sans Condensed · body: Commissioner · hero: full-width roman H1 with the city, then a strip with a real session photo and two stepped call buttons · nav: white sticky bar, logo, 5 anchors, two italic numbers, red call button; mobile logo, call icon, burger · footer: light #F0F1F2, branches, licence, future sections · imagery: client photos · signature: price ladder stepping right at the angle of the logo italic
+ * axes: light/display-condensed/chromatic-red · posture: restrained · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: imagery (client photos are small, 790 px), used at or below native size and cropped off their feathered edges */
+/* Hallmark · waive 7b · concept.md "Look: фон" and the design system fix the paper at #FFFFFF · the client photos are shot on white with feathered edges; any tint shows a seam around them */
+/* Hallmark · waive 23 · the red surface at 1280x800 is the primary call button of the hero, the one action of the screen · concept.md: red = action only, so the call is meant to be the loudest thing in view */
+/* Hallmark · finish F4 · .btn--light is the primary of the dark military band only (red on #1E1A1B fails contrast, 2.61); one filled primary per surface */
+/* Hallmark · finish 28a · the photos flagged as lazy sit far below the fold; the hero image is eager with fetchpriority=high and the LCP is the H1 text */
+/* Hallmark · waive 39b · concept.md "Кнопки: висота 56" and 56px full-width calls on mobile · people in pain tap from a phone; the approved design system fixes 56px for every call button */
+/* Hallmark · finish F19 · concept.md 8.3 sets the scale: Sofia Sans Condensed 700/800 for facts and actions, Commissioner 400–600 for text; kept as approved */
+/* Client design tokens from design/concept.md (veon-concept: colors, fonts; "Дизайн-система для FULL"). */
+:root {
+  /* colour roles */
+  --color-bg: #FFFFFF;
+  --color-surface: #F0F1F2;
+  --color-text: #1E1A1B;
+  --color-muted: #5E5759;
+  --color-accent: #B51F24;
+  --color-accent-hover: #7E1519;
+  --color-on-accent: #FFFFFF;
+  --color-accent-ink: var(--color-on-accent);
+  --color-inverse-bg: #1E1A1B;
+  --color-inverse-text: #FFFFFF;
+  --color-inverse-muted: #B9B1B3;
+  --color-border: #E1E2E4;
+  --color-border-strong: #1E1A1B;
+  --color-focus: #1E1A1B;
+  --color-focus-inverse: #FFFFFF;
+
+  /* type */
+  --font-display: "Sofia Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Commissioner Variable", "Commissioner", system-ui, sans-serif;
+  --fs-xs: 0.8125rem;                                         /* 13 */
+  --fs-small: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);   /* 14 / 15 */
+  --fs-body: clamp(1.0625rem, 1.04rem + 0.1vw, 1.125rem);     /* 17 / 18 */
+  --fs-button: clamp(1.125rem, 1.09rem + 0.15vw, 1.25rem);    /* 18 / 20 */
+  --fs-action: clamp(1.5rem, 1.25rem + 0.9vw, 2rem);          /* 24 / 32 */
+  --fs-action-lg: clamp(1.75rem, 1.4rem + 1.1vw, 2.5rem);     /* 28 / 40 */
+  --fs-h2: clamp(2.125rem, 1.55rem + 2.3vw, 3.5rem);          /* 34 / 56 */
+  --fs-display: clamp(2.75rem, 1.2rem + 5.6vw, 6.5rem);       /* 44 / 104 */
+  --fs-figure: clamp(3.5rem, 2.3rem + 4.5vw, 6.5rem);         /* 56 / 104 */
+  --lh-display: 0.95;
+
+  /* grid and spacing (step 8) */
+  --container: 1320px;
+  --gutter: clamp(1.25rem, 0.4rem + 3.2vw, 3.75rem);          /* 20 → 60 */
+  --col-gap: clamp(1rem, 0.8rem + 0.6vw, 1.5rem);              /* 16 → 24 */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-6: 3rem;
+  --space-8: 4rem;
+  --space-12: 6rem;
+  --space-16: 8rem;
+  --section-gap: clamp(4.5rem, 2.6rem + 6vw, 8rem);           /* 72 → 128 */
+  --header-h: 60px;
+  --callbar-h: 56px;
+  --radius: 4px;
+  --tap: 44px;
+
+  /* motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur: 520ms;
+  --dur-fast: 180ms;
+}
+@media (min-width: 1024px) {
+  :root { --header-h: 72px; }
+}

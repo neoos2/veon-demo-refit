@@ -1,0 +1,42 @@
+---
+import Section from "./Section.astro";
+import Icon from "./Icon.astro";
+import { branches, mapUrl } from "../data/clinic";
+---
+<Section id="branches" rec="R-004,R-010" class="br">
+  <div class="container">
+    <h2 class="h2 br__title">Відділення в Харкові</h2>
+    <ul class="br__list">
+      {branches.map((b) => (
+        <li class="br__item">
+          <h3 class="br__street">{b.street}</h3>
+          <a class="br__phone act" href={b.phoneHref} aria-label={`Подзвонити у відділення ${b.street}: ${b.phoneDisplay}`} data-rec="R-005">
+            <span class="nudge">{b.phoneDisplay}</span>
+          </a>
+          <p class="br__hours">{b.hours.map((h) => <span>{h}</span>)}</p>
+          <a class="link-act br__map" href={mapUrl(b.mapQuery)} target="_blank" rel="noopener" data-rec="R-105">
+            <span>На карті</span><span class="nudge"><Icon name="arrow" /></span><span class="visually-hidden">: {b.street} (відкриється Google Maps)</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .br { background: var(--color-surface); padding-block: var(--section-gap); }
+  .br__title { margin-bottom: var(--space-6); }
+  .br__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-6); grid-template-columns: minmax(0, 1fr); }
+  .br__item { display: grid; gap: var(--space-2); justify-items: start; padding-top: var(--space-3); border-top: 2px solid var(--color-text); }
+  .br__street { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-action); line-height: 1.05; }
+  .br__phone {
+    display: inline-flex; align-items: center; min-height: 56px; color: var(--color-accent);
+    font-size: var(--fs-action-lg); text-decoration: none; transition: color var(--dur-fast) var(--ease-out);
+  }
+  .br__phone:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
+  .br__hours { display: grid; color: var(--color-muted); font-weight: 500; }
+  .br__map { font-size: var(--fs-body); }
+  @media (min-width: 768px) {
+    .br__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); }
+  }
+</style>

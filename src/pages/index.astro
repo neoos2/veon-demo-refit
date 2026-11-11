@@ -1,0 +1,45 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Indications from "../components/Indications.astro";
+import Services from "../components/Services.astro";
+import Military from "../components/Military.astro";
+import Doctor from "../components/Doctor.astro";
+import Branches from "../components/Branches.astro";
+import Footer from "../components/Footer.astro";
+import CallBar from "../components/CallBar.astro";
+import { branches } from "../data/clinic";
+
+const title = "Реабілітація хребта й суглобів у Харкові — Refit";
+const description =
+  "Лікувальна гімнастика, декомпресійна кінезотерапія і дитячі програми. Консультація лікаря 600 грн. Два відділення: пр. Науки, 9 Д і пр. Тракторобудівників, 1 Б.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": branches.map((b) => ({
+    "@type": "MedicalClinic",
+    name: `Refit — ${b.street}`,
+    telephone: b.phoneHref.replace("tel:", ""),
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: b.street,
+      addressLocality: "Харків",
+      addressCountry: "UA",
+    },
+    openingHours: b.schemaHours,
+  })),
+};
+---
+<Base lang="uk" title={title} description={description} mainRec="R-104,R-106,R-110,R-301,R-302,R-304">
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <Header slot="header" />
+  <Hero />
+  <Indications />
+  <Services />
+  <Military />
+  <Doctor />
+  <Branches />
+  <Footer slot="footer" />
+  <CallBar slot="footer" />
+</Base>
